@@ -8,6 +8,11 @@ export type TAddress={
     country:string;
 }
 export type THobbies= string[];
+export type TOrders ={
+    productName: string,
+    price: number,
+    quantity: number
+}
 
 
 export type TUser = {
@@ -20,4 +25,5 @@ export type TUser = {
   isActive:boolean;
   hobbies: THobbies;
   address:TAddress;
+  orders?:TOrders;
 }
