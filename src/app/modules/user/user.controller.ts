@@ -22,7 +22,25 @@ const createUser = async (req: Request, res: Response )=> {
       });
     }
   };
+  const getAllUser = async (req: Request, res: Response) => {
+    try {
+      const result = await UserServices.getAllUserFromDB();
+  
+      res.status(200).json({
+        success: true,
+        message: ' users fetched succesfully',
+        data: result,
+      });
+    } catch (err: any) {
+      res.status(500).json({
+        success: false,
+        message: err.message || 'something went wrong',
+        error: err,
+      });
+    }
+  };
 
   export const userController={
-    createUser
+    createUser,
+    getAllUser
   }
