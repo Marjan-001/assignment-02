@@ -36,12 +36,12 @@ const OrdersSchema = new Schema<TOrders>({
 const UserSchema = new Schema<TUser>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true },
-  password: { type: String },
+  password: { type: String,required:true },
   fullName: { type: FullNameSchema, required: true, _id: false },
   age: { type: Number },
   email: { type: String, required: true, unique: true },
-  isActive: { type: Boolean },
-  hobbies: { type: [String] },
+  isActive: { type: Boolean,required:true },
+  hobbies: { type: [String],required:true },
   address: { type: AddressSchema, required: true, _id: false },
   orders: { type: OrdersSchema },
 })
