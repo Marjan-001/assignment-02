@@ -13,10 +13,10 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User is created succesfully',
       data: result,
     })
-  } catch (err: any) {
-    res.status(500).json({
+  } catch (err) {
+    res.status(404).json({
       success: false,
-      message: err.message || 'something went wrong',
+      message:  'something went wrong',
       error: err,
     })
   }
@@ -30,10 +30,10 @@ const getAllUser = async (req: Request, res: Response) => {
       message: ' users fetched succesfully',
       data: result,
     })
-  } catch (err: any) {
-    res.status(500).json({
+  } catch (err) {
+    res.status(404).json({
       success: false,
-      message: err.message || 'something went wrong',
+      message: 'user not found',
       error: err,
     })
   }
@@ -50,9 +50,9 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: ' user fetched succesfully',
       data: result,
     })
-  } catch (err: any) {
+  } catch (err) {
  
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -73,9 +73,9 @@ const updateSingleUser = async (req: Request, res: Response) => {
       message: ' user updated succesfully',
       data: result,
     })
-  } catch (err: any) {
+  } catch (err) {
  
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -96,9 +96,9 @@ const deleteSingleUser = async (req: Request, res: Response) => {
       message: ' user deleted succesfully',
       data: result,
     })
-  } catch (err:any) {
+  } catch (err) {
  
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -108,11 +108,36 @@ const deleteSingleUser = async (req: Request, res: Response) => {
     })
   }
 }
+const createOrder= async(req: Request, res: Response)=>{
+  try{
+    const userId: number = Number(req.params.userId);
+    const orderData = req.body;
+    const addOrder = await UserServices.createOrderToDB(userId, orderData);
 
+    if (addOrder) {
+      res.status(200).json({
+        success: true,
+        message: 'Order created successfully!',
+        data: addOrder,
+      });
+    }
+  } 
+  catch(err){
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    })
+  }
+}
 export const userController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
-  deleteSingleUser
+  deleteSingleUser,
+  createOrder
 }

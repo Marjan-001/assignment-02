@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose'
 import { TAddress, TFullName, TOrders, TUser, UserModel } from './user.interface'
 import bcrypt from 'bcrypt'
@@ -29,9 +30,9 @@ const AddressSchema = new Schema<TAddress>({
   },
 })
 const OrdersSchema = new Schema<TOrders>({
-  productName: String,
-  price: Number,
-  quantity: Number,
+  productName: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
 })
 const UserSchema = new Schema<TUser,UserModel>({
   userId: { type: Number, required: true, unique: true },
@@ -54,6 +55,8 @@ UserSchema.statics.isUserExists=async function(userId:number){
   return existingUser;
 }
 
+
+
 //hashing password using bcrypt
  UserSchema.pre('save',async function(next){
     const user =this;
@@ -65,7 +68,10 @@ UserSchema.statics.isUserExists=async function(userId:number){
     )
     next();
  })
-
+UserSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 
 //hide password from the api response
 UserSchema.methods.toJSON = function () {

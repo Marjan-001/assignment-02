@@ -34,7 +34,7 @@ const UserValidationSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
   hobbies: z.array(z.string()),
   address: AddressValidationSchema,
-  orders: OrdersValidationSchema.optional(),
+  orders:z.array(OrdersValidationSchema).optional(),
 })
 
 export {

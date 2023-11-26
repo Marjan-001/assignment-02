@@ -28,11 +28,12 @@ export type TUser = {
   isDeleted?:boolean;
   hobbies: THobbies;
   address:TAddress;
-  orders?:TOrders;
+  orders?:TOrders[];
 }
 
 //create static
 
 export interface UserModel  extends Model<TUser>{
+    // eslint-disable-next-line no-unused-vars
     isUserExists(id:number):Promise<TUser|null> 
    }
