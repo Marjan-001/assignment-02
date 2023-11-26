@@ -68,4 +68,6 @@ UserSchema.methods.toJSON = function () {
 
   return odject
 }
+
+
 export const User = model<TUser>('User', UserSchema)
