@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { TAddress, TFullName, TOrders, TUser } from './user.interface'
+import { TAddress, TFullName, TOrders, TUser, UserModel } from './user.interface'
 import bcrypt from 'bcrypt'
 import config from '../../config/config'
 
@@ -33,7 +33,7 @@ const OrdersSchema = new Schema<TOrders>({
   price: Number,
   quantity: Number,
 })
-const UserSchema = new Schema<TUser>({
+const UserSchema = new Schema<TUser,UserModel>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true },
   password: { type: String,required:true },
@@ -41,10 +41,18 @@ const UserSchema = new Schema<TUser>({
   age: { type: Number },
   email: { type: String, required: true, unique: true },
   isActive: { type: Boolean,required:true },
+  isDeleted: {type: Boolean,default: false},
   hobbies: { type: [String],required:true },
   address: { type: AddressSchema, required: true, _id: false },
   orders: { type: OrdersSchema },
 })
+
+// create custom static
+
+UserSchema.statics.isUserExists=async function(userId:number){
+  const existingUser= await User.findOne({userId:userId})
+  return existingUser;
+}
 
 //hashing password using bcrypt
  UserSchema.pre('save',async function(next){
@@ -59,7 +67,6 @@ const UserSchema = new Schema<TUser>({
  })
 
 
-
 //hide password from the api response
 UserSchema.methods.toJSON = function () {
   const odject = this.toObject()
@@ -70,4 +77,4 @@ UserSchema.methods.toJSON = function () {
 }
 
 
-export const User = model<TUser>('User', UserSchema)
+export const User = model<TUser,UserModel>('User', UserSchema)
