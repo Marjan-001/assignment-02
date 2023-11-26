@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { UserServices } from './user.service'
-import { UserValidationSchema } from './user.validation'
+import { OrdersValidationSchema, UserValidationSchema } from './user.validation'
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -112,13 +112,14 @@ const createOrder= async(req: Request, res: Response)=>{
   try{
     const userId: number = Number(req.params.userId);
     const orderData = req.body;
-    const addOrder = await UserServices.createOrderToDB(userId, orderData);
+    const validateOrder = OrdersValidationSchema.parse(orderData)
+    const addOrder = await UserServices.addOrderToDB(userId,validateOrder);
 
     if (addOrder) {
       res.status(200).json({
         success: true,
         message: 'Order created successfully!',
-        data: addOrder,
+        data:null,
       });
     }
   } 
@@ -133,11 +134,39 @@ const createOrder= async(req: Request, res: Response)=>{
     })
   }
 }
+const getUserOrder= async(req: Request, res: Response)=>{
+  try{
+    const userId: number = Number(req.params.userId);
+   
+  const result = await UserServices.getUserOrderFromDB(userId)
+
+    
+      res.status(200).json({
+        success: true,
+        message: 'Order created successfully!',
+        data:result,
+      });
+    
+  } 
+  catch(err){
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    })
+  }
+}
+
+
 export const userController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
-  createOrder
+  createOrder,
+  getUserOrder
 }

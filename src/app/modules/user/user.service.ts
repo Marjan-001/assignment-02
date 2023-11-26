@@ -1,4 +1,4 @@
-import { TOrders, TUser } from './user.interface'
+import {  TOrders, TUser } from './user.interface'
 import { User } from './user.model'
 
 const createUserIntoDB = async (userData: TUser) => {
@@ -19,39 +19,43 @@ const getAllUserFromDB = async () => {
 }
 
 const getSingleUserFromDB = async (userId:number) => {
-  const result = await User.findOne({userId:userId}  )
 
-  return result
+  if(!(await User.isUserExists(userId))){
+    throw Error("USer not found")
+  }
+  const result = await User.findOne({userId:userId}  )
+ return result
 }
 
 const updateSingleUserFromDB = async(userId:number)=>{
+  if(!(await User.isUserExists(userId))){
+    throw Error("USer not found")
+  }
   const result = await User.updateOne({userId:userId})
   return result;
 }
 
-const deleteUserFromDB=async(id:number)=>{
-  const result = await User.deleteOne( { userId:id},{ isDeleted: { $ne: true } });
+const deleteUserFromDB=async(userId:number)=>{
+  if(!(await User.isUserExists(userId))){
+    throw Error("USer not found")
+  }
+  const result = await User.deleteOne( { userId},{ isDeleted: { $ne: true } });
   return  result;
 } 
 
-const createOrderToDB= async(userId:number,orderData:TOrders)=>{
-  
-    const userExists = await User.findOne({ userId:userId });
 
-    if (!userExists) {
-      return null; 
-    }
+const addOrderToDB = async(userId:number,orders:TOrders)=>{
+  const addOrder = await User.findOneAndUpdate({userId},{$addToSet:{orders:orders}})
+  return addOrder;
+}
 
-  
-    if (userExists.orders) {
-      userExists.orders.push(orderData);
-    } else {
-      userExists.orders = [orderData];
-    }
-    return await userExists.save();
-  }
-
-
+const getUserOrderFromDB = async(userId:number)=>{
+  if(!(await User.isUserExists(userId))){
+    throw Error("USer not found")
+  }  
+  const result =await User.findOne({userId},{_id:false,orders:true});
+  return result;
+}
 
 export const UserServices = {
   createUserIntoDB,
@@ -59,5 +63,6 @@ export const UserServices = {
   getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteUserFromDB,
-  createOrderToDB
+  addOrderToDB,
+  getUserOrderFromDB
 }

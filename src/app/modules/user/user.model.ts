@@ -82,5 +82,7 @@ UserSchema.methods.toJSON = function () {
   return odject
 }
 
-
+UserSchema.statics.isUserExists=async(userId:number)=>{
+  return await User.findOne({userId})
+}
 export const User = model<TUser,UserModel>('User', UserSchema)
