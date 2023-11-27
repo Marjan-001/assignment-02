@@ -142,7 +142,7 @@ const getUserOrder = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Order created successfully!',
+      message: 'Order fetched successfully!',
       data: result,
     })
   } catch (err) {

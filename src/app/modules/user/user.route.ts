@@ -11,5 +11,5 @@ router.put('/users/:userId', userController.updateSingleUser)
 router.delete('/users/:userId', userController.deleteSingleUser)
 // order
 router.put('/users/:userId/orders', userController.createOrder)
-router.get('/users/:userId/orders', userController.createOrder)
+router.get('/users/:userId/orders', userController.getUserOrder)
 export const UserRoutes = router

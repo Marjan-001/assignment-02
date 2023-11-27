@@ -41,7 +41,7 @@ const addOrderToDB = async(userId:number,orders:TOrders)=>{
 const getUserOrderFromDB = async(userId:number)=>{
  
   const result =await User.findOne({userId},{_id:false,orders:true});
-  return result;
+  return result?.orders;
 }
 
 export const UserServices = {
