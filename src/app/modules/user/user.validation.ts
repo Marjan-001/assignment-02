@@ -4,10 +4,8 @@ const FullNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(2)
-    .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
-      message: 'First Name must start with a capital letter',
-    }),
+    .max(20),
+    
   lastName: z.string(),
 })
 
@@ -29,12 +27,12 @@ const UserValidationSchema = z.object({
   password: z.string().max(20),
   fullName: FullNameValidationSchema,
   age: z.number(),
-  email: z.string(),
+  email: z.string().email(),
   isActive: z.boolean().default(true),
   isDeleted: z.boolean().optional().default(false),
-  hobbies: z.array(z.string()),
+  hobbies: z.string().array(),
   address: AddressValidationSchema,
-  orders:z.array(OrdersValidationSchema).optional(),
+  orders: z.array(OrdersValidationSchema).optional(),
 })
 
 export {
